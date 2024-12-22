@@ -39,14 +39,14 @@ def CLEAN():
     print('Dados nulos: ', df.isnull().sum().sum())
 
     #Changing date format
-    df['DATA'] = pd.to_datetime(df['DATA'], format='%d/%m%Y', errors='coerce')
+    df['DATA'] = pd.to_datetime(df['DATA'], format='%d/%m/%Y', errors='coerce')
 
     #Removing user identifying columns
     df = df[['IDADE', 'DATA', 'ESTADO', 'SALÁRIO', 'NÍVEL EDUCACIONAL', 'NÚMERO DE FILHOS', 'ESTADO CIVIL', 'ANOS DE EXPERIÊNCIA', 'ÁREA DE ATUAÇÃO']]
 
     print(df.head(5))
 
-    df.to_csv('clientes-v4.csv')
+    df.to_csv('clientes-v4.csv', index=False)
 
 def PREPARATION():
     df = pd.read_csv('clientes-v4.csv')
@@ -55,7 +55,17 @@ def PREPARATION():
 
     #Normalizing data from IDADE and SALARIO using MixMaxScaler
     scaler = MinMaxScaler()
-    df['IDADE'] = scaler.fit_transform(df[['IDADE']])
+    df['MinMax IDADE'] = scaler.fit_transform(df[['IDADE']])
+    df['MinMax SALÁRIO'] = scaler.fit_transform(df[['SALÁRIO']])
+
+    #Standarding data with Standard and Robust scalers.
+    sscaler = StandardScaler()
+    df['Standard IDADE'] = sscaler.fit_transform(df[['IDADE']])
+    df['Standard SALÁRIO'] = sscaler.fit_transform(df[['SALÁRIO']])
+
+    rscaler = RobustScaler()
+    df['Robust IDADE'] = rscaler.fit_transform(df[['IDADE']])
+    df['Robust SALÁRIO'] = rscaler.fit_transform(df[['SALÁRIO']])
 
     print(df.head(5))
 
